@@ -1,0 +1,35 @@
+table dim_Categoria_Economica
+	lineageTag: 0bd3cf88-0621-4ead-985b-ab2d3af7965d
+
+	column id_categoria_economica
+		dataType: string
+		lineageTag: 12b7c44d-c425-4bfd-bb63-b0bb20c37a27
+		summarizeBy: none
+		sourceColumn: id_categoria_economica
+
+		annotation SummarizationSetBy = Automatic
+
+	column nome_categoria_economica
+		dataType: string
+		lineageTag: 96666b10-a044-4e28-ac7b-8c99fecf3384
+		summarizeBy: none
+		sourceColumn: nome_categoria_economica
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Categoria_Economica = m
+		mode: import
+		queryGroup: Despesas
+		source =
+				let
+				    Fonte = #"Despesas BigQuery",
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"id_categoria_economica", "nome_categoria_economica"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas", {"id_categoria_economica"}),
+				    #"Colocar Cada Palavra Em Maiúscula" = Table.TransformColumns(#"Duplicatas Removidas",{{"nome_categoria_economica", Text.Proper, type text}})
+				in
+				    #"Colocar Cada Palavra Em Maiúscula"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

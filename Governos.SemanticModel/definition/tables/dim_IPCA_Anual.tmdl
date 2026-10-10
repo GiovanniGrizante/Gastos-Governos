@@ -1,0 +1,45 @@
+table dim_IPCA_Anual
+	lineageTag: 3b75a6b9-146d-4362-b1b0-3b618c9735ca
+
+	column Valor
+		dataType: double
+		lineageTag: 48430ae2-36e4-447d-9aba-adcb78dc0274
+		summarizeBy: sum
+		sourceColumn: Valor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: c97f4a69-53a4-4aba-9eab-ee496ab4579c
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition dim_IPCA_Anual = m
+		mode: import
+		source =
+				let
+				  Origem = Json.Document(
+				    Web.Contents("https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/2266/p/all")),
+				    #"Convertido para Tabela" = Table.FromList(Origem, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Column1 Expandido" = Table.ExpandRecordColumn(#"Convertido para Tabela", "Column1", {"V", "D3N"}, {"V", "D3N"}),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Column1 Expandido", [PromoteAllScalars=true]),
+				    #"Tipo Alterado com Localidade" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos", {{"Valor", type number}}, "en-US"),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Tipo Alterado com Localidade",{{"Mês", type date}}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado",{{"Mês", "Data"}}),
+				    #"Ano Inserido" = Table.AddColumn(#"Colunas Renomeadas", "Ano", each Date.Year([Data]), Int64.Type),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Ano Inserido",{"Ano"})
+				in
+				    #"Colunas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

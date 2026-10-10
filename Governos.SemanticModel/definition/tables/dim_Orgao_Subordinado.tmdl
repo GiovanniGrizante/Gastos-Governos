@@ -1,0 +1,36 @@
+table dim_Orgao_Subordinado
+	lineageTag: 36a4ee47-f907-40c6-9de0-dbcdf075a293
+
+	column id_orgao_subordinado
+		dataType: string
+		lineageTag: 59f00534-f46e-4d8a-bf70-f587bf48aaec
+		summarizeBy: none
+		sourceColumn: id_orgao_subordinado
+
+		annotation SummarizationSetBy = Automatic
+
+	column nome_orgao_subordinado
+		dataType: string
+		lineageTag: dc83c9a6-f3b5-4f08-9680-31fd70bd0801
+		summarizeBy: none
+		sourceColumn: nome_orgao_subordinado
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Orgao_Subordinado = m
+		mode: import
+		queryGroup: Despesas
+		source =
+				let
+				    Fonte = #"Despesas BigQuery",
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"id_orgao_subordinado", "nome_orgao_subordinado"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas", {"id_orgao_subordinado"}),
+				    #"Sem null" = Table.SelectRows(#"Duplicatas Removidas", each [nome_orgao_subordinado] <> null),
+				    #"Valor Substituído" = Table.ReplaceValue(#"Sem null",null,"-1",Replacer.ReplaceValue,{"id_orgao_subordinado"})
+				in
+				    #"Valor Substituído"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

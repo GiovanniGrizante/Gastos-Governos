@@ -1,0 +1,49 @@
+table fact_População
+	lineageTag: 78b313bf-6769-47e5-a0f7-a36812dd6d9b
+
+	column Ano
+		dataType: string
+		lineageTag: 56932bb4-1278-42ad-b373-7d5e07dc5d45
+		summarizeBy: none
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Estado
+		dataType: string
+		lineageTag: 188a46b4-6a22-4e1e-9a57-4f4493478618
+		summarizeBy: none
+		sourceColumn: ID_Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	column Valor
+		dataType: string
+		lineageTag: d7d78601-15b7-42ec-affb-24efd8652cef
+		summarizeBy: none
+		sourceColumn: Valor
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_População = m
+		mode: import
+		queryGroup: População
+		source =
+				let
+				    Fonte = Json.Document(
+				        Web.Contents(
+				            "https://apisidra.ibge.gov.br/values/t/6579/n3/all/v/9324/p/all"
+				        )
+				    ),
+				    ParaTabela = Table.FromList(Fonte, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Column1 Expandido" = Table.ExpandRecordColumn(ParaTabela, "Column1", {"NC", "NN", "MC", "MN", "V", "D1C", "D1N", "D2C", "D2N", "D3C", "D3N"}, {"Column1.NC", "Column1.NN", "Column1.MC", "Column1.MN", "Column1.V", "Column1.D1C", "Column1.D1N", "Column1.D2C", "Column1.D2N", "Column1.D3C", "Column1.D3N"}),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Column1 Expandido", [PromoteAllScalars=true]),
+				    #"Outras Colunas Removidas" = Table.SelectColumns(#"Cabeçalhos Promovidos",{"Ano", "Unidade da Federação (Código)", "Valor"}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Outras Colunas Removidas",{{"Unidade da Federação (Código)", "ID_Estado"}})
+				in
+				    #"Colunas Renomeadas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

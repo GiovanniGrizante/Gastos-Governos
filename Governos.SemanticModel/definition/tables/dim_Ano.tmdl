@@ -1,0 +1,45 @@
+table dim_Ano
+	lineageTag: 3c52b4bc-4980-4b4c-bf51-22d441535786
+
+	column Ano
+		formatString: 0
+		lineageTag: ccf2d53e-984f-4bd8-a188-ec3259ba85aa
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: CALENDARIO[Ano]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ultima Data' =
+			
+			VAR UltimoDia = CALCULATE(MAX(CALENDARIO[Date]), FILTER(CALENDARIO, CALENDARIO[Date].[Ano] = dim_Ano[Ano]))
+			
+			RETURN DATE(YEAR(UltimoDia), MONTH(UltimoDia), 1)
+		formatString: Short Date
+		lineageTag: 5aecc216-033f-48b5-8bce-a8da6448988c
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Fator Deflacao' =
+			
+			VAR IndiceMensal = RELATED(dim_IPCA_Anual[Valor])
+			VAR IndiceRef = LOOKUPVALUE(dim_IPCA_Anual[Valor], dim_IPCA_Anual[Data], MAX(dim_Ano[Ultima Data]))
+			RETURN DIVIDE(IndiceRef,IndiceMensal)
+		lineageTag: c16d993f-83d5-4d21-8fa9-18888f072e12
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition dim_Ano = calculated
+		mode: import
+		source = DISTINCT(CALENDARIO[Ano])
+
+	annotation PBI_Id = 53848ef4cc5741e7883b5abd8bcc66d8
+

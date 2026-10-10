@@ -1,0 +1,35 @@
+table dim_Unid_Gestora
+	lineageTag: 5e8901be-04b7-4eb6-8d4a-cf4ef18b84b7
+
+	column ID_Unidade_Gestora
+		dataType: string
+		lineageTag: 651384cd-fda4-425c-9127-7ebe38419b4f
+		summarizeBy: none
+		sourceColumn: ID_Unidade_Gestora
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidade_Gestora
+		dataType: string
+		lineageTag: b3722829-f7e8-4249-a77f-0482a56ff18e
+		summarizeBy: none
+		sourceColumn: Unidade_Gestora
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Unid_Gestora = m
+		mode: import
+		queryGroup: Arrecadações
+		source =
+				let
+				    Fonte = #"Arrecadações CSV",
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"ID_Unidade_Gestora", "Unidade_Gestora"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas", {"ID_Unidade_Gestora"}),
+				    #"Colocar Cada Palavra Em Maiúscula" = Table.TransformColumns(#"Duplicatas Removidas",{{"Unidade_Gestora", Text.Proper, type text}})
+				in
+				    #"Colocar Cada Palavra Em Maiúscula"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

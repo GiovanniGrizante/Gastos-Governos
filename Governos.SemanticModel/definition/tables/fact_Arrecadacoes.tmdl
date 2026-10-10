@@ -1,0 +1,113 @@
+table fact_Arrecadacoes
+	lineageTag: 842f84e5-70e5-4f63-b29a-a2a965c8a86e
+
+	column Ano
+		dataType: string
+		lineageTag: e7e83939-d508-472f-948f-be40a235818a
+		summarizeBy: none
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Orgao_Superior
+		dataType: string
+		lineageTag: 4e83a179-90fa-4bdb-84b2-27724de7e2bb
+		summarizeBy: none
+		sourceColumn: ID_Orgao_Superior
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Orgao_Subordinado
+		dataType: string
+		lineageTag: 854ed87f-8e9a-4f00-bf17-e1f7d713dc15
+		summarizeBy: none
+		sourceColumn: ID_Orgao_Subordinado
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Unidade_Gestora
+		dataType: string
+		lineageTag: 37fba092-e27f-4de3-b950-94ba68c6c535
+		summarizeBy: none
+		sourceColumn: ID_Unidade_Gestora
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Categoria_Economica
+		dataType: string
+		lineageTag: 3e2ae181-d924-4963-90e3-9216de36589e
+		summarizeBy: none
+		sourceColumn: ID_Categoria_Economica
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Origem
+		dataType: string
+		lineageTag: 1e267698-cf46-4f92-9639-b3db4ce7cca6
+		summarizeBy: none
+		sourceColumn: ID_Origem
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Especie
+		dataType: string
+		lineageTag: 35c3f4fd-776a-4a8c-9110-0d9130d145d7
+		summarizeBy: none
+		sourceColumn: ID_Especie
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Orçamento Atualizado (Valor Previsto)'
+		dataType: string
+		lineageTag: d65bd0ee-e4e2-4ed1-86b6-2274efcf2784
+		summarizeBy: none
+		sourceColumn: Orçamento Atualizado (Valor Previsto)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Receita Realizada (Valor Arrecadado)'
+		dataType: string
+		lineageTag: 3812efa8-fa5f-48c9-80fb-055b140fef0c
+		summarizeBy: none
+		sourceColumn: Receita Realizada (Valor Arrecadado)
+
+		annotation SummarizationSetBy = Automatic
+
+	column '% Previsto/Realizado'
+		dataType: string
+		lineageTag: b2da2733-bbb8-4f71-b946-76990ab62e16
+		summarizeBy: none
+		sourceColumn: % Previsto/Realizado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Valor Lançado'
+		dataType: string
+		lineageTag: 42a58047-6c12-44fb-bc17-d818a25c73f9
+		summarizeBy: none
+		sourceColumn: Valor Lançado
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Arrecadaçao Corrigida' = fact_Arrecadacoes[Receita Realizada (Valor Arrecadado)] * RELATED(dim_Ano[Fator Deflacao])
+		lineageTag: 8de478c7-e5bf-40b8-849d-8faca39e81a6
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_Arrecadacoes = m
+		mode: import
+		queryGroup: Arrecadações
+		source =
+				let
+				    Fonte = #"Arrecadações CSV",
+				    #"Colunas Removidas" = Table.RemoveColumns(Fonte,{"Orgao_Superior", "Orgao_Subordinado", "Unidade_Gestora", "Categoria_Economica", "Origem", "Especie", "Detalhamento"})
+				in
+				    #"Colunas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

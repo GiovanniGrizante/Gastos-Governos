@@ -1,0 +1,34 @@
+table dim_Elemento_Despesas
+	lineageTag: 98d565f5-d8c3-40ce-888e-3c5e035c2518
+
+	column id_elemento_despesa
+		dataType: string
+		lineageTag: ce68aeb6-d9fa-43b6-a74c-68ab0d14ec14
+		summarizeBy: none
+		sourceColumn: id_elemento_despesa
+
+		annotation SummarizationSetBy = Automatic
+
+	column nome_elemento_despesa
+		dataType: string
+		lineageTag: 40a6cf89-9c28-4228-a662-53051337b6e0
+		summarizeBy: none
+		sourceColumn: nome_elemento_despesa
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Elemento_Despesas = m
+		mode: import
+		queryGroup: Despesas
+		source =
+				let
+				    Fonte = #"Despesas BigQuery",
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"id_elemento_despesa", "nome_elemento_despesa"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas", {"id_elemento_despesa"})
+				in
+				    #"Duplicatas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

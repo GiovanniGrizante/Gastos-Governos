@@ -1,0 +1,35 @@
+table dim_Orgao_Superior
+	lineageTag: 4be90e3f-b5c2-465a-b6ac-3070283021e5
+
+	column id_orgao_superior
+		dataType: string
+		lineageTag: 39ea7d5e-53e0-4f4d-8f50-1eb8839086db
+		summarizeBy: none
+		sourceColumn: id_orgao_superior
+
+		annotation SummarizationSetBy = Automatic
+
+	column nome_orgao_superior
+		dataType: string
+		lineageTag: 6a744b3f-9427-40a8-8739-feccf52c3cbc
+		summarizeBy: none
+		sourceColumn: nome_orgao_superior
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Orgao_Superior = m
+		mode: import
+		queryGroup: Despesas
+		source =
+				let
+				    Fonte = #"Despesas BigQuery",
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"id_orgao_superior", "nome_orgao_superior"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas", {"id_orgao_superior"}),
+				    #"Sem null" = Table.SelectRows(#"Duplicatas Removidas", each [id_orgao_superior] <> null)
+				in
+				    #"Sem null"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

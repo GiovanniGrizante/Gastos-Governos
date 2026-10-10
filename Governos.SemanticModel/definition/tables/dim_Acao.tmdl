@@ -1,0 +1,35 @@
+table dim_Acao
+	lineageTag: a769ca70-45e9-4855-acc1-ebdea5afc492
+
+	column id_acao
+		dataType: string
+		lineageTag: 8194aea0-72b3-4949-a26e-5f105459a88c
+		summarizeBy: none
+		sourceColumn: id_acao
+
+		annotation SummarizationSetBy = Automatic
+
+	column nome_acao
+		dataType: string
+		lineageTag: 903175a9-7fa4-427a-8047-1238478537a3
+		summarizeBy: none
+		sourceColumn: nome_acao
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Acao = m
+		mode: import
+		queryGroup: Despesas
+		source =
+				let
+				    Fonte = #"Despesas BigQuery",
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"id_acao", "nome_acao"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas", {"id_acao"}),
+				    #"Colocar Cada Palavra Em Maiúscula" = Table.TransformColumns(#"Duplicatas Removidas",{{"nome_acao", Text.Proper, type text}})
+				in
+				    #"Colocar Cada Palavra Em Maiúscula"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

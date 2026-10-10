@@ -1,0 +1,125 @@
+table dim_Presidentes
+	lineageTag: 1ba57942-e76a-4f6f-af30-60145e314574
+
+	column Presidente
+		dataType: string
+		lineageTag: 83014e23-ff06-4434-86e3-42986f8ac7ab
+		summarizeBy: none
+		sourceColumn: Presidente
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Inicio
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: 292f0b61-fc63-4d47-848d-94d5fd399132
+		summarizeBy: none
+		sourceColumn: Inicio
+
+		variation Variation
+			isDefault
+			relationship: 733b7b9b-0d7c-4502-aec4-9481dd4327d5
+			defaultHierarchy: LocalDateTable_ca0185fc-1057-45cb-9cb3-c7a1a5ee08c2.'Hierarquia de datas'
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column Fim
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: ffd343bd-275b-4f4f-9056-0df76de5532a
+		summarizeBy: none
+		sourceColumn: Fim
+
+		variation Variation
+			isDefault
+			relationship: 830e117f-6c0c-4b50-994b-bebb760c4766
+			defaultHierarchy: LocalDateTable_980d2283-d082-43ca-b83e-15b1986a29fa.'Hierarquia de datas'
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column Partido
+		dataType: string
+		lineageTag: 8e2cc0aa-4050-437d-9e87-1238ad7644a7
+		summarizeBy: none
+		sourceColumn: Partido
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mandato = dim_Presidentes[Presidente] & " (" & YEAR(dim_Presidentes[Inicio]) & ")"
+		lineageTag: e9584743-c91d-4a44-a0ef-0b5a9beaf617
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Foto
+		dataType: string
+		lineageTag: 50daa3eb-9303-4a61-98c8-e789fe2e79fe
+		summarizeBy: none
+		sourceColumn: Foto
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Presidentes = m
+		mode: import
+		source = ```
+				let
+				    Query = "SELECT ?presidente ?presidenteLabel ?inicio ?fim ?partidoLabel ?foto WHERE {
+				  ?presidente p:P39 ?mandato .
+				  ?mandato ps:P39 wd:Q5176750 ;
+				           pq:P580 ?inicio .
+				  OPTIONAL { ?mandato pq:P582 ?fim . }
+				  OPTIONAL { ?presidente wdt:P102 ?partido . }
+				  OPTIONAL { ?presidente wdt:P18 ?foto . }
+				  SERVICE wikibase:label { bd:serviceParam wikibase:language ""pt,en"". }
+				}
+				ORDER BY ?inicio",
+				    
+				    Url = "https://query.wikidata.org/sparql?query=" & Uri.EscapeDataString(Query) & "&format=json",
+				    
+				    Fonte = Json.Document(Web.Contents(Url)),
+				    
+				    Resultados = Fonte[results][bindings],
+				    
+				    ParaTabela = Table.FromList(Resultados, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				  #"Expandido Column1" = Table.ExpandRecordColumn(ParaTabela, "Column1", {"presidenteLabel", "inicio", "fim", "partidoLabel", "foto"}, {"Presidente", "Inicio", "Fim", "Partido", "Foto"}),
+				    
+				    ExtrairPresidente = Table.TransformColumns(#"Expandido Column1", {"Presidente", each _[value], type text}),
+				    ExtrairInicio = Table.TransformColumns(ExtrairPresidente, {"Inicio", each _[value], type text}),
+				    ExtrairFim = Table.TransformColumns(ExtrairInicio, {"Fim", each if _ = null then null else _[value], type text}),
+				    ExtrairPartido = Table.TransformColumns(ExtrairFim, {"Partido", each if _ = null then null else _[value], type text}),
+				  #"Expandido Foto" = Table.ExpandRecordColumn(ExtrairPartido, "Foto", {"value"}, {"Foto"}),
+				    
+				    ConverterInicio = Table.TransformColumns(#"Expandido Foto", {{"Inicio", each DateTime.Date(DateTime.FromText(_, [Format="yyyy-MM-ddTHH:mm:ssZ"])), type date}}),
+				    ConverterFim = Table.TransformColumns(ConverterInicio, {{"Fim", each if _ = null then null else DateTime.Date(DateTime.FromText(_, [Format="yyyy-MM-ddTHH:mm:ssZ"])), type date}}),
+				    
+				    SubstituirFimNulo = Table.ReplaceValue(ConverterFim, null, Date.From(DateTime.LocalNow()), Replacer.ReplaceValue, {"Fim"}),
+				    
+				    #"Colocar Cada Palavra Em Maiúscula" = Table.TransformColumns(SubstituirFimNulo,{{"Partido", Text.Proper, type text}})
+				in
+				    #"Colocar Cada Palavra Em Maiúscula"
+				```
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

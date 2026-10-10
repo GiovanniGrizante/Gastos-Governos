@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Governos"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "67f2e0e4-4b8e-44ae-94f3-5b3b7a729d9f"
+  }
+}

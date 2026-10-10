@@ -1,0 +1,23 @@
+table dim_Presidentes_A
+	lineageTag: 9d461858-47c6-41e7-a920-52ea4f5b883e
+
+	column Presidente
+		lineageTag: 3a57ad12-183b-465b-a0be-5cb19f9e1de0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: CALENDARIO[Presidente]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Foto = LOOKUPVALUE(dim_Presidentes[Foto], dim_Presidentes[Mandato], dim_Presidentes_A[Presidente])
+		lineageTag: 2a34a7a3-b90a-46fc-b58f-ef7e99ddd737
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Presidentes_A = calculated
+		mode: import
+		source = DISTINCT(CALENDARIO[Presidente])
+
+	annotation PBI_Id = 3702ac46f5e64833b2c2485514a53201
+

@@ -1,0 +1,355 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 812.03540003448734,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 711.38318683532407,
+            "y": 0
+          },
+          "nodeIndex": "dim_Categoria_Economica",
+          "nodeLineageTag": "0bd3cf88-0621-4ead-985b-ab2d3af7965d",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 9,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 42.279994417166861,
+            "y": 420.57489898916805
+          },
+          "nodeIndex": "dim_Elemento_Despesas",
+          "nodeLineageTag": "98d565f5-d8c3-40ce-888e-3c5e035c2518",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 10,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 45.310972714226125,
+            "y": 0
+          },
+          "nodeIndex": "dim_Funcao",
+          "nodeLineageTag": "12c0541f-23e6-4744-96f6-7c3437ef0121",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 11,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 352.53552559056664,
+            "y": 0
+          },
+          "nodeIndex": "dim_Grupo_Despesas",
+          "nodeLineageTag": "e0b344d3-1a53-4f49-b9e3-4da81007de4c",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 12,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 711.63442832620012,
+            "y": 404.6435064493752
+          },
+          "nodeIndex": "dim_Orgao_Subordinado",
+          "nodeLineageTag": "36a4ee47-f907-40c6-9de0-dbcdf075a293",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 13,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 715.28248372481937,
+            "y": 196.08260521636217
+          },
+          "nodeIndex": "dim_Orgao_Superior",
+          "nodeLineageTag": "4be90e3f-b5c2-465a-b6ac-3070283021e5",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 19,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 36.426340926812514,
+            "y": 239.25821664411754
+          },
+          "nodeIndex": "dim_Programa_Orçamentario",
+          "nodeLineageTag": "7a42cd00-f780-4d54-8685-b0848e80680e",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 14,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 44.685317,
+            "y": 559.38760741356589
+          },
+          "nodeIndex": "dim_Subfuncao",
+          "nodeLineageTag": "aedb39c1-d20c-4347-a8f0-01d49f27bd92",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 18,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 334.23521362384304,
+            "y": 237.6654699776343
+          },
+          "nodeIndex": "fact_Despesas",
+          "nodeLineageTag": "0b9705fe-0a11-4def-9967-934cffb1302d",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 15
+        },
+        {
+          "location": {
+            "x": 1472.9874043702971,
+            "y": 697.78234419445562
+          },
+          "nodeIndex": "fact_População",
+          "nodeLineageTag": "78b313bf-6769-47e5-a0f7-a36812dd6d9b",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 16,
+          "expandedHeight": 200
+        },
+        {
+          "location": {
+            "x": 1475.1543002230585,
+            "y": 514.33754204441152
+          },
+          "nodeIndex": "dim_Estados",
+          "nodeLineageTag": "d26b7841-da53-4742-82c2-acf2e842fbbf",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 17,
+          "expandedHeight": 200
+        },
+        {
+          "location": {
+            "x": 726.916997210782,
+            "y": 688.822535515912
+          },
+          "nodeIndex": "CALENDARIO",
+          "nodeLineageTag": "222b1ab2-98c9-4e4a-ac41-8002751ff0cd",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 42.0096593547286,
+            "y": 695.13486424611608
+          },
+          "nodeIndex": "dim_Acao",
+          "nodeLineageTag": "a769ca70-45e9-4855-acc1-ebdea5afc492",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 3,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 1095.7073525952499,
+            "y": 0
+          },
+          "nodeIndex": "dim_Especie",
+          "nodeLineageTag": "eb80acc3-f6c7-46a8-9150-84ed2d3765e9",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 4,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 1355.4574765277523,
+            "y": 0
+          },
+          "nodeIndex": "dim_Origem",
+          "nodeLineageTag": "5323019a-cdfa-4793-af39-6dc3c4eeb8ed",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 5,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 1653.5158830639587,
+            "y": 1.2122253149398183
+          },
+          "nodeIndex": "dim_Unid_Gestora",
+          "nodeLineageTag": "5e8901be-04b7-4eb6-8d4a-cf4ef18b84b7",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 6,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 1475.7290219513097,
+            "y": 227.92770833389207
+          },
+          "nodeIndex": "fact_Arrecadacoes",
+          "nodeLineageTag": "842f84e5-70e5-4f63-b29a-a2a965c8a86e",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 7,
+          "expandedHeight": 300
+        },
+        {
+          "location": {
+            "x": 730.21381079581306,
+            "y": 559.13989890345692
+          },
+          "nodeIndex": "dim_IPCA_Mensal",
+          "nodeLineageTag": "028ca923-2e76-4e82-a363-50fcbf0f8d2e",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 20,
+          "expandedHeight": 128
+        },
+        {
+          "location": {
+            "x": 1107.774241662014,
+            "y": 695.85994289687733
+          },
+          "nodeIndex": "dim_IPCA_Anual",
+          "nodeLineageTag": "3b75a6b9-146d-4362-b1b0-3b618c9735ca",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 21,
+          "expandedHeight": 159.09333147238885
+        },
+        {
+          "location": {
+            "x": 1114.2052906952131,
+            "y": 455.22488239032384
+          },
+          "nodeIndex": "dim_Ano",
+          "nodeLineageTag": "3c52b4bc-4980-4b4c-bf51-22d441535786",
+          "size": {
+            "height": 128,
+            "width": 226.95333426380535
+          },
+          "zIndex": 22,
+          "expandedHeight": 200
+        },
+        {
+          "location": {
+            "x": 1883.0068709487125,
+            "y": 444.98534305295425
+          },
+          "nodeIndex": "dim_Presidentes",
+          "nodeLineageTag": "1ba57942-e76a-4f6f-af30-60145e314574",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 23
+        },
+        {
+          "location": {
+            "x": 1759.0461981682652,
+            "y": 712.2103088564952
+          },
+          "nodeIndex": "dim_Presidentes_A",
+          "nodeLineageTag": "9d461858-47c6-41e7-a920-52ea4f5b883e",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 1,
+          "expandedHeight": 200
+        },
+        {
+          "location": {
+            "x": 2048.1016184857954,
+            "y": 699.64010142562086
+          },
+          "nodeIndex": "dim_Presidentes_B",
+          "nodeLineageTag": "608ad43e-fa5f-43c3-b85a-91c1f98fe901",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 2,
+          "expandedHeight": 200
+        },
+        {
+          "location": {
+            "x": 1890.914598284827,
+            "y": 265.2189609434472
+          },
+          "nodeIndex": "Medidas",
+          "nodeLineageTag": "58dd86be-bd0d-4aec-bf7a-d5a492278389",
+          "size": {
+            "height": 72,
+            "width": 234
+          },
+          "zIndex": 0,
+          "expandedHeight": 200
+        }
+      ],
+      "name": "Todas as tabelas",
+      "zoomValue": 79.55318203769987,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas as tabelas",
+  "defaultDiagram": "Todas as tabelas"
+}

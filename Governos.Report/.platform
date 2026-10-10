@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Governos"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c598a2c8-8b8c-4dcb-89b4-ffc7217951f1"
+  }
+}

@@ -1,0 +1,148 @@
+table fact_Despesas
+	lineageTag: 0b9705fe-0a11-4def-9967-934cffb1302d
+
+	column sigla_uf
+		dataType: string
+		lineageTag: f7ea9ef7-b86d-4582-8b5a-0732d019fed3
+		summarizeBy: none
+		sourceColumn: sigla_uf
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_funcao
+		dataType: string
+		lineageTag: 855bd04e-e1fb-4af6-9296-f560cc5d5aca
+		summarizeBy: none
+		sourceColumn: id_funcao
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_subfuncao
+		dataType: string
+		lineageTag: d181d596-5442-45cf-8022-b4ffd831bfbb
+		summarizeBy: none
+		sourceColumn: id_subfuncao
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_orgao_superior
+		dataType: string
+		lineageTag: c84ec458-5ed6-4800-8369-3ec11c965e93
+		summarizeBy: none
+		sourceColumn: id_orgao_superior
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_orgao_subordinado
+		dataType: string
+		lineageTag: aee3d781-27ec-4f25-8582-fd154f9c5558
+		summarizeBy: none
+		sourceColumn: id_orgao_subordinado
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_categoria_economica
+		dataType: string
+		lineageTag: ff614c52-4b3d-45d0-99ef-84019421aa5d
+		summarizeBy: none
+		sourceColumn: id_categoria_economica
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_grupo_despesa
+		dataType: string
+		lineageTag: 8fa906ce-36f1-4db2-b379-bd5c704f808e
+		summarizeBy: none
+		sourceColumn: id_grupo_despesa
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_elemento_despesa
+		dataType: string
+		lineageTag: b94fd27c-bc48-407e-a5a4-d427fabe1ca4
+		summarizeBy: none
+		sourceColumn: id_elemento_despesa
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_programa_orcamentario
+		dataType: string
+		lineageTag: 5fe6dc5c-10f6-48ee-90f9-ba3532ca6fa3
+		summarizeBy: none
+		sourceColumn: id_programa_orcamentario
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor_empenhado
+		dataType: double
+		lineageTag: 78a4a72e-363f-4017-a598-ce861fd4e2b7
+		summarizeBy: sum
+		sourceColumn: valor_empenhado
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valor_liquidado
+		dataType: double
+		lineageTag: 15e28e35-601f-4dfd-ba54-7de23a15dc3e
+		summarizeBy: sum
+		sourceColumn: valor_liquidado
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valor_pago
+		dataType: double
+		lineageTag: 0a55d72a-3b9b-48f9-bbcd-861f8785d5bd
+		summarizeBy: sum
+		sourceColumn: valor_pago
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 3bbb0fa3-936c-4dd5-902b-d5170f83f933
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Gasto Corrigido' = fact_Despesas[valor_pago] * RELATED(dim_IPCA_Mensal[Fator_Deflacao])
+		formatString: 0
+		lineageTag: 32f0dc60-93ca-472a-b388-9473776d5575
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_acao
+		dataType: string
+		lineageTag: 69b6da95-5e4c-48de-856f-c0a584c2338f
+		summarizeBy: none
+		sourceColumn: id_acao
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_Despesas = m
+		mode: import
+		queryGroup: Despesas
+		source =
+				let
+				    Fonte = #"Despesas BigQuery",
+				    #"Personalização Adicionada" = Table.AddColumn(Fonte, "Data", each Text.From([mes]) & "-" & Text.From([ano])),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Personalização Adicionada",{"nome_elemento_despesa", "nome_programa_orcamentario", "ano", "mes", "nome_funcao", "nome_subfuncao", "nome_orgao_superior", "nome_orgao_subordinado", "nome_categoria_economica", "nome_grupo_despesa", "nome_acao"}),
+				    #"Colunas Reordenadas" = Table.ReorderColumns(#"Colunas Removidas",{"Data", "sigla_uf", "id_funcao", "id_subfuncao", "id_orgao_superior", "id_orgao_subordinado", "id_categoria_economica", "id_grupo_despesa", "id_elemento_despesa", "id_programa_orcamentario", "valor_empenhado", "valor_liquidado", "valor_pago"}),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Colunas Reordenadas",{{"Data", type date}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

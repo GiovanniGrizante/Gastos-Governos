@@ -1,0 +1,62 @@
+table dim_IPCA_Mensal
+	lineageTag: 028ca923-2e76-4e82-a363-50fcbf0f8d2e
+
+	column Valor
+		dataType: double
+		lineageTag: a0a8a80e-3074-4633-85cb-9ae52c6c9502
+		summarizeBy: sum
+		sourceColumn: Valor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 48a07fc5-eeee-47c6-8532-ac099d2dc278
+		summarizeBy: none
+		sourceColumn: Data
+
+		variation Variation
+			isDefault
+			relationship: 42dbe73c-e396-4778-b866-c16e40bacd87
+			defaultHierarchy: LocalDateTable_b9ed686e-5bc6-4671-bdaf-07cbe11e7133.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Fator_Deflacao =
+			
+			VAR IndiceBase = CALCULATE(MAX(dim_IPCA_Mensal[Valor]), dim_IPCA_Mensal[Data] = MAX(CALENDARIO[Date]))
+			
+			RETURN DIVIDE(IndiceBase, dim_IPCA_Mensal[Valor])
+		lineageTag: cc47b00c-c10d-440d-93aa-f4f06f33cd7e
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition dim_IPCA_Mensal = m
+		mode: import
+		source =
+				let
+				  Origem = Json.Document(
+				    Web.Contents("https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/2266/p/all")),
+				    #"Convertido para Tabela" = Table.FromList(Origem, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Column1 Expandido" = Table.ExpandRecordColumn(#"Convertido para Tabela", "Column1", {"V", "D3N"}, {"V", "D3N"}),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Column1 Expandido", [PromoteAllScalars=true]),
+				    #"Tipo Alterado com Localidade" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos", {{"Valor", type number}}, "en-US"),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Tipo Alterado com Localidade",{{"Mês", type date}}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado",{{"Mês", "Data"}})
+				in
+				    #"Colunas Renomeadas"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

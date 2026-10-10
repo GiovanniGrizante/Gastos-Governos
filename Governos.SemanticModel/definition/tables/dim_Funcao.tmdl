@@ -1,0 +1,34 @@
+table dim_Funcao
+	lineageTag: 12c0541f-23e6-4744-96f6-7c3437ef0121
+
+	column id_funcao
+		dataType: string
+		lineageTag: e375a7c2-a42f-4d6e-9394-3c755a4f7d49
+		summarizeBy: none
+		sourceColumn: id_funcao
+
+		annotation SummarizationSetBy = Automatic
+
+	column nome_funcao
+		dataType: string
+		lineageTag: 25a904ef-1193-41a2-9181-256f491943f5
+		summarizeBy: none
+		sourceColumn: nome_funcao
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Funcao = m
+		mode: import
+		queryGroup: Despesas
+		source =
+				let
+				    Fonte = #"Despesas BigQuery",
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"id_funcao", "nome_funcao"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas", {"id_funcao"})
+				in
+				    #"Duplicatas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

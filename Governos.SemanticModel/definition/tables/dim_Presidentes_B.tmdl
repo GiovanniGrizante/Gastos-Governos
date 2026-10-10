@@ -1,0 +1,25 @@
+table dim_Presidentes_B
+	lineageTag: 608ad43e-fa5f-43c3-b85a-91c1f98fe901
+
+	column Presidente
+		lineageTag: ec2a640d-7160-45ab-a003-1d42205e53c9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: dim_Presidentes_A[Presidente]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Foto
+		lineageTag: d83749a3-7c46-4ded-a657-c7370a458d13
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: dim_Presidentes_A[Foto]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Presidentes_B = calculated
+		mode: import
+		source = dim_Presidentes_A
+
+	annotation PBI_Id = 8aa861d5dc1442398e9b1e2dd2215211
+

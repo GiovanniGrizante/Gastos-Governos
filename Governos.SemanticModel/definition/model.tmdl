@@ -1,0 +1,66 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup Despesas
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup População
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup Arrecadações
+
+	annotation PBI_QueryGroupOrder = 4
+
+queryGroup 'Transformar Arquivo de Receitas (2)'
+
+	annotation PBI_QueryGroupOrder = 5
+
+queryGroup 'Transformar Arquivo de Receitas (2)\Consultas Auxiliares'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Despesas BigQuery","Arrecadações CSV","fact_População","fact_Despesas","dim_Orgao_Superior","dim_Orgao_Subordinado","dim_Categoria_Economica","dim_Funcao","dim_Subfuncao","dim_Grupo_Despesas","dim_Elemento_Despesas","dim_Programa_Orçamentario","dim_Acao","dim_Estados","dim_IPCA_Mensal","dim_IPCA_Anual","dim_Presidentes","fact_Arrecadacoes","dim_Origem","dim_Especie","dim_Unid_Gestora","Arquivo de Amostra (2)","Parâmetro2","Transformar o Arquivo de Exemplo (2)","Transformar Arquivo (2)","Medidas"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table fact_Despesas
+ref table DateTableTemplate_ccba12a0-082f-4713-87ba-ef99ec781628
+ref table dim_Funcao
+ref table dim_Subfuncao
+ref table dim_Grupo_Despesas
+ref table dim_Elemento_Despesas
+ref table dim_Programa_Orçamentario
+ref table fact_População
+ref table dim_Estados
+ref table dim_IPCA_Mensal
+ref table dim_Presidentes
+ref table LocalDateTable_ca0185fc-1057-45cb-9cb3-c7a1a5ee08c2
+ref table LocalDateTable_980d2283-d082-43ca-b83e-15b1986a29fa
+ref table CALENDARIO
+ref table LocalDateTable_c2a4a96d-85c6-4288-b649-d4b7ed8e7fb9
+ref table dim_Orgao_Superior
+ref table dim_Orgao_Subordinado
+ref table dim_Categoria_Economica
+ref table dim_Acao
+ref table dim_Origem
+ref table dim_Especie
+ref table dim_Unid_Gestora
+ref table fact_Arrecadacoes
+ref table LocalDateTable_b9ed686e-5bc6-4671-bdaf-07cbe11e7133
+ref table dim_IPCA_Anual
+ref table dim_Ano
+ref table dim_Presidentes_A
+ref table dim_Presidentes_B
+ref table Medidas
+
+ref cultureInfo pt-BR
+

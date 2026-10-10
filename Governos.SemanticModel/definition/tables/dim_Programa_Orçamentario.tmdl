@@ -1,0 +1,34 @@
+table dim_Programa_Orçamentario
+	lineageTag: 7a42cd00-f780-4d54-8685-b0848e80680e
+
+	column id_programa_orcamentario
+		dataType: string
+		lineageTag: 24e0d92e-3eed-45cb-a8cb-64ee5633a22a
+		summarizeBy: none
+		sourceColumn: id_programa_orcamentario
+
+		annotation SummarizationSetBy = Automatic
+
+	column nome_programa_orcamentario
+		dataType: string
+		lineageTag: fce0e365-f92d-46ad-803f-bd9c9c5346d3
+		summarizeBy: none
+		sourceColumn: nome_programa_orcamentario
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Programa_Orçamentario = m
+		mode: import
+		queryGroup: Despesas
+		source =
+				let
+				    Fonte = #"Despesas BigQuery",
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"id_programa_orcamentario", "nome_programa_orcamentario"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas", {"id_programa_orcamentario"})
+				in
+				    #"Duplicatas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

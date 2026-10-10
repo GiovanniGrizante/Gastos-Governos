@@ -1,0 +1,116 @@
+relationship AutoDetected_d5982f6f-e1af-4b91-bb6c-9c7e786a689a
+	fromColumn: fact_Despesas.id_funcao
+	toColumn: dim_Funcao.id_funcao
+
+relationship AutoDetected_b3f76e79-6315-4528-a1f4-4200d1ca2ef7
+	fromColumn: fact_Despesas.id_subfuncao
+	toColumn: dim_Subfuncao.id_subfuncao
+
+relationship AutoDetected_6ad8dbc9-523f-418a-9f92-c1e822be7d4e
+	fromColumn: fact_Despesas.id_grupo_despesa
+	toColumn: dim_Grupo_Despesas.id_grupo_despesa
+
+relationship AutoDetected_ce001881-0950-4ef3-bc25-64a0827e3c48
+	fromColumn: fact_Despesas.id_elemento_despesa
+	toColumn: dim_Elemento_Despesas.id_elemento_despesa
+
+relationship AutoDetected_9a9af0bb-ddc9-4a27-a687-ea2ee713dacb
+	fromColumn: fact_Despesas.id_programa_orcamentario
+	toColumn: dim_Programa_Orçamentario.id_programa_orcamentario
+
+relationship 733b7b9b-0d7c-4502-aec4-9481dd4327d5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_Presidentes.Inicio
+	toColumn: LocalDateTable_ca0185fc-1057-45cb-9cb3-c7a1a5ee08c2.Date
+
+relationship 830e117f-6c0c-4b50-994b-bebb760c4766
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_Presidentes.Fim
+	toColumn: LocalDateTable_980d2283-d082-43ca-b83e-15b1986a29fa.Date
+
+relationship AutoDetected_5f62d1fd-e952-49b2-baa8-a852e0f7bbd7
+	fromColumn: fact_População.ID_Estado
+	toColumn: dim_Estados.ID_Estado
+
+relationship 0b397ecc-2698-4ac8-a829-7a615823150d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: CALENDARIO.Date
+	toColumn: LocalDateTable_c2a4a96d-85c6-4288-b649-d4b7ed8e7fb9.Date
+
+relationship 408a334d-05a4-1a57-3a30-5b5cfdbaebe7
+	fromColumn: fact_Despesas.Data
+	toColumn: CALENDARIO.Date
+
+relationship AutoDetected_90c41486-de0e-4810-bd88-dcfed8bb67ce
+	fromColumn: fact_Despesas.id_orgao_superior
+	toColumn: dim_Orgao_Superior.id_orgao_superior
+
+relationship AutoDetected_ba74353a-63d4-4dc3-ac3f-8609b3144703
+	fromColumn: fact_Despesas.id_orgao_subordinado
+	toColumn: dim_Orgao_Subordinado.id_orgao_subordinado
+
+relationship AutoDetected_fe3a8a05-d15a-480d-be2b-764685a27bec
+	fromColumn: fact_Despesas.id_categoria_economica
+	toColumn: dim_Categoria_Economica.id_categoria_economica
+
+relationship AutoDetected_0bd5021d-c01d-4936-92cb-936d973bb454
+	fromColumn: fact_Despesas.id_acao
+	toColumn: dim_Acao.id_acao
+
+relationship AutoDetected_d245d929-81f5-4cbf-9282-6111e5d6c486
+	fromColumn: fact_Arrecadacoes.ID_Orgao_Subordinado
+	toColumn: dim_Orgao_Subordinado.id_orgao_subordinado
+
+relationship AutoDetected_fc0f804d-1426-4874-bc44-03b4f218b6b6
+	fromColumn: fact_Arrecadacoes.ID_Origem
+	toColumn: dim_Origem.ID_Origem
+
+relationship AutoDetected_b108702c-0d18-4f22-a206-9333d35c72c1
+	fromColumn: fact_Arrecadacoes.ID_Especie
+	toColumn: dim_Especie.ID_Especie
+
+relationship AutoDetected_c3c02d36-b954-4992-bc0b-5945465af246
+	fromColumn: fact_Arrecadacoes.ID_Unidade_Gestora
+	toColumn: dim_Unid_Gestora.ID_Unidade_Gestora
+
+relationship fefce310-3b34-9d33-7312-e8096515fdb7
+	fromColumn: fact_Arrecadacoes.ID_Orgao_Superior
+	toColumn: dim_Orgao_Superior.id_orgao_superior
+
+relationship 14d80b21-5334-8b34-bead-1fb8484c6243
+	fromColumn: fact_Arrecadacoes.ID_Categoria_Economica
+	toColumn: dim_Categoria_Economica.id_categoria_economica
+
+relationship 42dbe73c-e396-4778-b866-c16e40bacd87
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_IPCA_Mensal.Data
+	toColumn: LocalDateTable_b9ed686e-5bc6-4671-bdaf-07cbe11e7133.Date
+
+relationship 53f26210-58cd-7898-d882-54e8da30ef0a
+	fromColumn: fact_Despesas.Data
+	toColumn: dim_IPCA_Mensal.Data
+
+relationship 9cbfdd64-d670-fd4b-fa71-fc0484e0515d
+	fromColumn: fact_População.Ano
+	toColumn: dim_IPCA_Anual.Data
+
+relationship e5e48b5f-9cf5-bc37-5d0d-bd8817bf5d1e
+	fromColumn: fact_Arrecadacoes.Ano
+	toColumn: dim_Ano.Ano
+
+relationship 0aef7fda-9b9f-e4a6-d744-ea0383c8bab0
+	fromColumn: dim_IPCA_Anual.Data
+	toColumn: CALENDARIO.Date
+
+relationship 398746fa-c633-85ef-b57d-f5603799ebba
+	fromColumn: dim_Ano.'Ultima Data'
+	toColumn: dim_IPCA_Anual.Data
+
+relationship f43f68f8-3827-6f33-c88a-44bc9e653cee
+	fromColumn: dim_Presidentes.Mandato
+	toColumn: dim_Presidentes_A.Presidente
+
+relationship 79d94c88-58cf-dc51-a89c-5b9782445ec1
+	fromColumn: dim_Presidentes.Mandato
+	toColumn: dim_Presidentes_B.Presidente
+

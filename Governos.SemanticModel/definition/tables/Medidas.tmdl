@@ -1,0 +1,17 @@
+table Medidas
+	lineageTag: 58dd86be-bd0d-4aec-bf7a-d5a492278389
+
+	measure Temp = CALCULATE(SUM(fact_Arrecadacoes[Arrecadaçao Corrigida]), 0)
+		lineageTag: 325055da-b6ad-4ed4-9581-ef69484faefe
+
+	partition Medidas = m
+		mode: import
+		source =
+				let
+				  Origem = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Coluna 1" = _t]),
+				    #"Colunas Removidas" = Table.RemoveColumns(Origem,{"Coluna 1"})
+				in
+				  #"Colunas Removidas"
+
+	annotation PBI_ResultType = Table
+

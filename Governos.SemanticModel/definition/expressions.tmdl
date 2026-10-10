@@ -1,0 +1,128 @@
+expression 'Despesas BigQuery' = ```
+		let
+		    Fonte = GoogleBigQuery.Database(),
+		    AcessarProjeto = Fonte{[Name="dashboard-governo"]}[Data],
+		    ExecutarSQL = Value.NativeQuery(
+		        AcessarProjeto, 
+		        "SELECT 
+		        
+		        ano,
+		        mes,
+		        sigla_uf,
+		
+		        -- Função (núcleo da análise de infraestrutura)
+		        id_funcao,        nome_funcao,
+		        id_subfuncao,     nome_subfuncao,
+		
+		        -- Órgão
+		        id_orgao_superior,      nome_orgao_superior,
+		        id_orgao_subordinado,   nome_orgao_subordinado,
+		
+		        -- Classificação econômica (essencial p/ isolar investimento)
+		        id_categoria_economica, nome_categoria_economica,
+		        id_grupo_despesa,       nome_grupo_despesa,
+		        id_elemento_despesa,    nome_elemento_despesa,
+		
+		        -- Programa (opcional, útil)
+		        id_programa_orcamentario, nome_programa_orcamentario,
+		        id_acao,                  nome_acao,
+		
+		        -- Métricas
+		        valor_empenhado,
+		        valor_liquidado,
+		        valor_pago
+		        FROM `basedosdados.br_cgu_despesas_publicas.execucao`",
+		        null,
+		        [EnableFolding=true]
+		    )
+		in
+		    ExecutarSQL
+		```
+	lineageTag: e2368906-67cd-4fd3-9e88-5cb6b4986362
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
+expression Parâmetro2 = #"Arquivo de Amostra (2)" meta [IsParameterQuery=true, BinaryIdentifier=#"Arquivo de Amostra (2)", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: d16ecb14-5d7e-41d0-81f9-fb40bf2d5d7a
+	queryGroup: 'Transformar Arquivo de Receitas (2)\Consultas Auxiliares'
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Binary
+
+expression 'Arquivo de Amostra (2)' =
+		let
+		    Fonte = Folder.Files("C:\Users\Giovanni\Documents\Programação\Power BI\Receitas"),
+		    Navegação1 = Fonte{0}[Content]
+		in
+		    Navegação1
+	lineageTag: 898f5fc3-9f18-4263-b1a3-d38832d6d425
+	queryGroup: 'Transformar Arquivo de Receitas (2)\Consultas Auxiliares'
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transformar o Arquivo de Exemplo (2)' =
+		let
+		    Fonte = Csv.Document(Parâmetro2,[Delimiter=";", Columns=13, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+		    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true])
+		in
+		    #"Cabeçalhos Promovidos"
+	lineageTag: f461c4f9-13f3-438d-b412-8b991b19c53f
+	queryGroup: 'Transformar Arquivo de Receitas (2)'
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
+expression 'Transformar Arquivo (2)' =
+		let
+		    Fonte = (Parâmetro2 as binary) => let
+		    Fonte = Csv.Document(Parâmetro2,[Delimiter=";", Columns=13, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+		    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true])
+		in
+		    #"Cabeçalhos Promovidos"
+		in
+		    Fonte
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transformar o Arquivo de Exemplo (2)""}" ]
+	lineageTag: c0cba989-e84d-42da-96ef-e7ab283d6c4d
+	queryGroup: 'Transformar Arquivo de Receitas (2)\Consultas Auxiliares'
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Function
+
+expression 'Arrecadações CSV' =
+		let
+		    Fonte = Folder.Files("C:\Users\Giovanni\Documents\Programação\Power BI\Receitas"),
+		    #"Arquivos Ocultos Filtrados1" = Table.SelectRows(Fonte, each [Attributes]?[Hidden]? <> true),
+		    #"Invocar Função Personalizada1" = Table.AddColumn(#"Arquivos Ocultos Filtrados1", "Transformar Arquivo (2)", each #"Transformar Arquivo (2)"([Content])),
+		    #"Colunas Renomeadas1" = Table.RenameColumns(#"Invocar Função Personalizada1", {"Name", "Nome da Origem"}),
+		    #"Outras Colunas Removidas1" = Table.SelectColumns(#"Colunas Renomeadas1", {"Transformar Arquivo (2)"}),
+		    #"Coluna de Tabela Expandida1" = Table.ExpandTableColumn(#"Outras Colunas Removidas1", "Transformar Arquivo (2)", Table.ColumnNames(#"Transformar Arquivo (2)"(#"Arquivo de Amostra (2)"))),
+		    #"Órgão Superior" = Table.SplitColumn(#"Coluna de Tabela Expandida1", "Órgão Superior", Splitter.SplitTextByDelimiter(" - ", QuoteStyle.Csv), {"ID_Orgao_Superior", "Orgao_Superior"}),
+		    #"Órgão Subordinado" = Table.SplitColumn(#"Órgão Superior", "Órgão", Splitter.SplitTextByDelimiter(" - ", QuoteStyle.Csv), {"ID_Orgao_Subordinado", "Orgao_Subordinado", "Órgão.3"}),
+		    #"Unidade Gestora" = Table.SplitColumn(#"Órgão Subordinado", "Unidade Gestora", Splitter.SplitTextByDelimiter(" - ", QuoteStyle.Csv), {"ID_Unidade_Gestora", "Unidade_Gestora", "Unidade Gestora.3", "Unidade Gestora.4"}),
+		    #"Categoria Economica" = Table.SplitColumn(#"Unidade Gestora", "Categoria", Splitter.SplitTextByDelimiter(" - ", QuoteStyle.Csv), {"ID_Categoria_Economica", "Categoria_Economica", "Categoria.3"}),
+		    #"Valor Substituído" = Table.ReplaceValue(#"Categoria Economica","7","1",Replacer.ReplaceText,{"ID_Categoria_Economica"}),
+		    #"Valor Substituído2" = Table.ReplaceValue(#"Valor Substituído","1","3",Replacer.ReplaceText,{"ID_Categoria_Economica"}),
+		    #"Valor Substituído1" = Table.ReplaceValue(#"Valor Substituído2","8","2",Replacer.ReplaceText,{"ID_Categoria_Economica"}),
+		    #"Valor Substituído3" = Table.ReplaceValue(#"Valor Substituído1","2","4",Replacer.ReplaceText,{"ID_Categoria_Economica"}),
+		    #"Valor Substituído4" = Table.ReplaceValue(#"Valor Substituído3","Sem informação","I",Replacer.ReplaceText,{"ID_Categoria_Economica"}),
+		    Origem = Table.SplitColumn(#"Valor Substituído4", "Origem", Splitter.SplitTextByDelimiter(" - ", QuoteStyle.Csv), {"ID_Origem", "Origem"}),
+		    Espécie = Table.SplitColumn(Origem, "Espécie", Splitter.SplitTextByDelimiter(" - ", QuoteStyle.Csv), {"ID_Especie", "Especie", "Espécie.3"}),
+		    #"Colunas Removidas" = Table.RemoveColumns(Espécie,{"Órgão.3", "Unidade Gestora.3", "Unidade Gestora.4", "Categoria.3", "Espécie.3", ""}),
+		    #"Valor Substituído5" = Table.ReplaceValue(#"Colunas Removidas","Sem informação","-1",Replacer.ReplaceText,{"ID_Origem"}),
+		    #"Valor Substituído6" = Table.ReplaceValue(#"Valor Substituído5",null,"Sem informação",Replacer.ReplaceValue,{"Origem"}),
+		    #"Valor Substituído7" = Table.ReplaceValue(#"Valor Substituído6","S/I","-1",Replacer.ReplaceText,{"ID_Especie"})
+		in
+		    #"Valor Substituído7"
+	lineageTag: 633b82bc-cf3c-4513-b689-240db68dd07b
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,60 @@
+table dim_Estados
+	lineageTag: d26b7841-da53-4742-82c2-acf2e842fbbf
+
+	column ID_Estado
+		dataType: string
+		lineageTag: 22ae2d04-7af5-4dbe-946f-70cc0df8f83e
+		summarizeBy: none
+		sourceColumn: ID_Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sigla_Estado
+		dataType: string
+		lineageTag: 7e215610-aafb-4255-ac19-708dce3f976b
+		summarizeBy: none
+		sourceColumn: Sigla_Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estado
+		dataType: string
+		lineageTag: 43a3f5c7-146b-4121-87ab-b98cf823159d
+		summarizeBy: none
+		sourceColumn: Estado
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sigla_Regiao
+		dataType: string
+		lineageTag: 26aba19a-6da8-46d3-8536-0f520f30affc
+		summarizeBy: none
+		sourceColumn: Sigla_Regiao
+
+		annotation SummarizationSetBy = Automatic
+
+	column Regiao
+		dataType: string
+		lineageTag: 8b1bf3ec-9f28-4211-b5e7-dd8c0b261e02
+		summarizeBy: none
+		sourceColumn: Regiao
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Estados = m
+		mode: import
+		queryGroup: População
+		source =
+				let
+				  Origem = Json.Document(Web.Contents("https://servicodados.ibge.gov.br/api/v1/localidades/estados")),
+				    #"Convertido para Tabela" = Table.FromList(Origem, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Column1 Expandido" = Table.ExpandRecordColumn(#"Convertido para Tabela", "Column1", {"id", "sigla", "nome", "regiao"}, {"Column1.id", "Column1.sigla", "Column1.nome", "Column1.regiao"}),
+				    #"Column1.regiao Expandido1" = Table.ExpandRecordColumn(#"Column1 Expandido", "Column1.regiao", {"sigla", "nome"}, {"Column1.regiao.sigla", "Column1.regiao.nome"}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Column1.regiao Expandido1",{{"Column1.id", "ID_Estado"}, {"Column1.sigla", "Sigla_Estado"}, {"Column1.nome", "Estado"}, {"Column1.regiao.sigla", "Sigla_Regiao"}, {"Column1.regiao.nome", "Regiao"}})
+				in
+				  #"Colunas Renomeadas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,52 @@
+table CALENDARIO
+	lineageTag: 222b1ab2-98c9-4e4a-ac41-8002751ff0cd
+
+	column Date
+		formatString: Short Date
+		lineageTag: 75dbae23-b98b-424c-8ee0-961694b3b02e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: 0b397ecc-2698-4ac8-a829-7a615823150d
+			defaultHierarchy: LocalDateTable_c2a4a96d-85c6-4288-b649-d4b7ed8e7fb9.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column MesAno = FORMAT(CALENDARIO[Date], "MMM/YYYY")
+		lineageTag: c3628784-fb04-4ff7-9f0c-547cb0771ca9
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Presidente =
+			
+			VAR DiaAtual = CALENDARIO[Date]
+			RETURN
+			    CALCULATE(MAX(dim_Presidentes[Mandato]), FILTER(dim_Presidentes, dim_Presidentes[Inicio] <= DiaAtual && dim_Presidentes[Fim] >= DiaAtual))
+		lineageTag: d84a0ac1-05e8-43be-91f3-e0a545be52ec
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes = FORMAT(CALENDARIO[Date], "MMM")
+		lineageTag: 3239587a-dad3-41ea-8d57-d9f828d7c8cb
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ano = YEAR(CALENDARIO[Date])
+		formatString: 0
+		lineageTag: bea5d5d6-f222-466e-b607-fd3913e3dcce
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition CALENDARIO = calculated
+		mode: import
+		source = CALENDAR(MIN(fact_Despesas[Data]),MAX(fact_Despesas[Data]))
+
+	annotation PBI_Id = 5714e87482e4437daeaec636d2ce6427
+

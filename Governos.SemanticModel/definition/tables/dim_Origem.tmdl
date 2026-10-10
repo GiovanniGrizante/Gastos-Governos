@@ -1,0 +1,34 @@
+table dim_Origem
+	lineageTag: 5323019a-cdfa-4793-af39-6dc3c4eeb8ed
+
+	column ID_Origem
+		dataType: string
+		lineageTag: b9c2125f-df4f-4285-92df-64355d181b45
+		summarizeBy: none
+		sourceColumn: ID_Origem
+
+		annotation SummarizationSetBy = Automatic
+
+	column Origem
+		dataType: string
+		lineageTag: 1f186314-de7e-4a41-80d9-4aa6922e83d9
+		summarizeBy: none
+		sourceColumn: Origem
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_Origem = m
+		mode: import
+		queryGroup: Arrecadações
+		source =
+				let
+				    Fonte = #"Arrecadações CSV",
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"ID_Origem", "Origem"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas", {"ID_Origem"})
+				in
+				    #"Duplicatas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
